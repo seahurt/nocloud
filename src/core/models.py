@@ -66,6 +66,17 @@ ssh_authorized_keys:
     """
 
     # TODO: using mac address to config network
+    """
+    version: 2
+    ethernets:
+      interface0:
+        match:
+          macaddress: "52:54:00:12:34:00"
+        set-name: interface0
+        addresses:
+          - 192.168.1.10/255.255.255.0
+        gateway4: 192.168.1.254
+    """
 
     def __str__(self):
         return self.name
