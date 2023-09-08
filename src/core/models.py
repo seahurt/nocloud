@@ -60,6 +60,13 @@ ssh_authorized_keys:
     meta_data_template = models.TextField()
     user_data_template = models.TextField()
 
+    """
+    KVM mac address starts with 52:54:00
+    
+    """
+
+    # TODO: using mac address to config network
+
     def __str__(self):
         return self.name
 
@@ -79,6 +86,7 @@ class VM(models.Model):
     config = models.JSONField(default=dict, null=True, blank=True)
     status = models.CharField(max_length=16, choices=())
     stdout = models.TextField(null=True, blank=True)
+    mac = models.CharField(max_length=32, unique=True)
 
     def __str__(self):
         return self.name
@@ -142,6 +150,7 @@ class VM(models.Model):
               f' --vcpus={self.cpu} ' \
               f' --disk {self.img},format={self.base_img.format},bus=virtio' \
               f' --disk {self.seed},device=cdrom' \
+              f' --network bridge=br0,model=virtio,mac={self.mac}' \
               f' --osinfo detect=on,name={self.base_img.osvar} ' \
               f' --noautoconsole'
         stdout, ret = run_cmd(cmd)
